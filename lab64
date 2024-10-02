@@ -1,0 +1,85 @@
+import Express from 'express';
+
+const app = Express();
+
+app.get('/', (req, res) =>
+res.send("<h3>Portal dos Dinossauros</h3><p>Acha que tem o que é necessário?</h3>")
+);
+
+app.get('/sobre', (req, res) =>
+res.send("<h3>My Server in Express</h3>")
+);
+const express = require('express');
+
+app.use(express.json());
+
+
+const quiz = [
+    {
+        pergunta: "Qual o maior dinossauro que já existiu?",
+        opcoes: ["Tiranossauro Rex", "Argentinossauro", "Velociraptor", "Triceratops"],
+        resposta: "Argentinossauro"
+    },
+    {
+        pergunta: "Em que período viveu o Tiranossauro Rex?",
+        opcoes: ["Jurássico", "Triássico", "Cretáceo", "Pleistoceno"],
+        resposta: "Cretáceo"
+    },
+    {
+        pergunta: "Qual dinossauro é conhecido por ter 3 chifres na cabeça?",
+        opcoes: ["Triceratops", "Estegossauro", "Pterodáctilo", "Velociraptor"],
+        resposta: "Triceratops"
+    },
+    {
+        pergunta: "Qual desses dinossauros é considerado um caçador rápido?",
+        opcoes: ["Estegossauro", "Velociraptor", "Apatossauro", "Diplodoco"],
+        resposta: "Velociraptor"
+    },
+    {
+        pergunta: "Qual dinossauro tinha uma grande vela nas costas?",
+        opcoes: ["Espinossauro", "Diplodoco", "Brachiossauro", "Allosaurus"],
+        resposta: "Espinossauro"
+    }
+];
+
+app.get('/quiz', (req, res) => {
+    const perguntas = quiz.map((q, index) => ({
+        numero: index + 1,
+        pergunta: q.pergunta,
+        opcoes: q.opcoes
+    }));
+    res.json(perguntas);
+});
+
+
+app.post('/quiz/respostas', (req, res) => {
+    const respostasUsuario = req.body; 
+
+    let pontuacao = 0;
+    respostasUsuario.forEach((resposta, index) => {
+        if (resposta === quiz[index].resposta) {
+            pontuacao += 1;
+        }
+    });
+
+    res.json({
+        mensagem: `Você acertou ${pontuacao} de ${quiz.length} perguntas!`,
+        pontuacao
+    });
+});
+
+const PORT = 3000;
+app.listen(PORT, () => {
+    console.log(`Servidor rodando na porta ${PORT}`);
+});
+
+app.listen(3000, () => 
+console.log('Servidor iniciado na porta 3000')
+);
+
+
+// testar a pagina inicial: curl localhost:3000/quiz
+
+// testar a pagina sobre: curl localhost:3000/quiz/about
+
+//testar respostas do quiz: curl -X POST http://localhost:3000/quiz/respostas
